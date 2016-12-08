@@ -45,6 +45,7 @@
     <Compile Include="Instructions.cs" />
     <Compile Include="Keypad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Triangle.cs" />
     <Compile Include="TriangleChecker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
