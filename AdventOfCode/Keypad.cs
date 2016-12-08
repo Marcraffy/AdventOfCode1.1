@@ -8,14 +8,14 @@
 
     public class Keypad
     {
-        private static int[,] keypad = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+        private static char[,] keypad = new char[,] { { '0', '0', '1', '0', '0' }, { '0', '2', '3', '4', '0' }, { '5', '6', '7', '8', '9' }, { '0', 'A', 'B', 'C', '0' }, {  '0', '0', 'D', '0', '0' } };
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int X { get; private set; }
+        public int Y { get; private set; }
         
-        public int DecodeDirections(Directions directions, int start)
+        public char DecodeDirections(Directions directions, char start)
         {
-            int currentPosition = start;
+            var currentPosition = start;
             var temp = Coord(currentPosition);
             X = temp[0];
             Y = temp[1];
@@ -26,27 +26,27 @@
             return currentPosition;
         }
 
-        public int GetCode(List<Directions> directions)
+        public string GetCode(List<Directions> directions)
         {
-            int result = 0;
-            int currentPosition = 5;
+            var result = "";
+            var currentPosition = '5';
             foreach (var direction in directions)
             {
                 currentPosition = DecodeDirections(direction, currentPosition);
-                result = result * 10 + currentPosition;
+                result += currentPosition;
             }
             return result;
         }
 
-        public int Key(int x, int y) =>
+        public char Key(int x, int y) =>
             keypad[y, x];
 
-        public int[] Coord(int key)
+        public int[] Coord(char key)
         {
             var coord = new int[2];
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     if (Key(i,j) == key)
                     {
@@ -57,28 +57,28 @@
             return coord;
         }
 
-        public int MoveKey(Move direction)
+        public char MoveKey(Move direction)
         {
             switch (direction)
             {
                 case Move.Up:
                     {
-                        Y -= Y == 0 ? 0 : 1;
+                        Y -= new char[] { '5', '2', '1', '4', '9' }.Contains(Key(X, Y)) ? 0 : 1;
                         break;
                     }
                 case Move.Down:
                     {
-                        Y += Y == 2 ? 0 : 1;
+                        Y += new char[] { '5', 'A', 'D', 'C', '9' }.Contains(Key(X, Y)) ? 0 : 1;
                         break;
                     }
                 case Move.Left:
                     {
-                        X -= X == 0 ? 0 : 1;
+                        X -= new char[] { '5', '2', '1', 'A', 'D' }.Contains(Key(X, Y)) ? 0 : 1;
                         break;
                     }
                 case Move.Right:
                     {
-                        X += X == 2 ? 0 : 1;
+                        X += new char[] { 'C', 'D', '1', '4', '9' }.Contains(Key(X, Y)) ? 0 : 1;
                         break;
                     }
             }
