@@ -5,7 +5,7 @@
     using System.IO;
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var stream = new StreamReader("AoCInput2.txt");
             var input = stream.ReadToEnd();
