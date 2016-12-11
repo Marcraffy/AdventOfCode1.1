@@ -9,6 +9,8 @@
     public class Room
     {
         public string Name { get; set; }
+        public string NameWithSpaces { get; set; }
+        public string NameDecrypted { get; set; }
         public int SectorId { get; set; }
         public string CheckSum { get; set; }
 
@@ -18,8 +20,20 @@
             CheckSum = strings[strings.Length - 1];
             SectorId = Convert.ToInt32(strings[strings.Length - 2]);
             Name = "";
+            NameWithSpaces = "";
+            NameDecrypted = "";
             for (int index = 0; index < strings.Length - 2; index++)
                 Name += strings[index];
+            for (int index = 0; index < strings.Length - 2; index++)
+            {
+                NameWithSpaces += strings[index] + ((index == (strings.Length - 3)) ? "" : " ");
+            }
+            DecryptName();
+        }
+
+        public void PrintRoom()
+        {
+            Console.WriteLine($"{NameDecrypted} \t{SectorId}");
         }
 
         public static List<Room> ParseString(string input)
@@ -29,6 +43,21 @@
             foreach (var item in strings)
                 result.Add(new Room(item));
             return result;
+        }
+
+        private void DecryptName()
+        {
+            var alphabet = "abcdefghijklmnopqrstuvwxyz";
+            foreach (var item in NameWithSpaces)
+            {
+                if (item == ' ')
+                {
+                    NameDecrypted += ' ';
+                    continue;
+                }
+
+                NameDecrypted += alphabet[(alphabet.IndexOf(item) + SectorId) % alphabet.Length];
+            }
         }
 
         public bool IsCheckSumValid()
@@ -80,5 +109,8 @@
             }
             return checkSumString;
         }
+
+        public static List<Room> Search(List<Room> rooms, string param) => 
+            rooms.FindAll(room => room.NameDecrypted.ToLowerInvariant().Contains(param.ToLowerInvariant()));
     }
 }
