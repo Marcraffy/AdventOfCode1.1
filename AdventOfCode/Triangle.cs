@@ -27,44 +27,43 @@
             return result;
         }
 
+        private static int[] ParseSnippet(string input)
+        {
+            var array = new List<int>();
+            var stringArray = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var item in stringArray)
+                array.Add(Convert.ToInt32(item));
+
+            return array.ToArray();
+        }
+
         public static List<int[]> ParseString(string input)
         {
-            var buffer = "";
-            var currentPos = 0;
+            var snippets = input.Split('\n');
             var result = new List<int[]>();
-            int[] array = new int[3];
+            var index = 0;
+            var arrayOne = new List<int>();
+            var arrayTwo = new List<int>();
+            var arrayThree = new List<int>();
 
-            foreach (var item in input)
+            foreach (var snippet in snippets)
             {
-                if (item == '\n')
+                var array = ParseSnippet(snippet);
+                arrayOne.Add(array[0]);
+                arrayTwo.Add(array[1]);
+                arrayThree.Add(array[2]);
+                index++;
+                if (index == 3)
                 {
-                    array[currentPos] = Convert.ToInt32(buffer);
-                    result.Add(array);
-                    array = new int[3];
-                    currentPos = 0;
-                    buffer = "";
-                    continue;
+                    result.Add(arrayOne.ToArray());
+                    result.Add(arrayTwo.ToArray());
+                    result.Add(arrayThree.ToArray());
+                    index = 0;
+                    arrayOne = new List<int>();
+                    arrayTwo = new List<int>();
+                    arrayThree = new List<int>();
                 }
-
-                if (item == ' ')
-                {
-                    if (buffer.Length == 0)
-                    {
-                        continue;
-                    }
-
-                    array[currentPos] = Convert.ToInt32(buffer);
-                    currentPos++;
-                    buffer = "";
-                    continue;
-                }
-
-                buffer += item;
-            }
-            if (buffer.Length != 0)
-            {
-                array[currentPos] = Convert.ToInt32(buffer);
-                result.Add(array);
             }
 
             return result;
